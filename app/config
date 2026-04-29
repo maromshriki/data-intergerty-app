@@ -1,0 +1,9 @@
+import os
+
+DB_URL = os.getenv("DB_URL", "postgresql://user:password@db:5432/files_db")
+
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY", "test")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY", "test")
+S3_BUCKET = os.getenv("S3_BUCKET", "files-bucket")
+S3_REGION = os.getenv("S3_REGION", "us-east-1")
+S3_ENDPOINT = os.getenv("S3_ENDPOINT", "http://minio:9000")  # לוקאלי עם MinIO

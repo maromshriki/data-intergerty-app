@@ -1,0 +1,13 @@
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+from app.db import Base
+
+class File(Base):
+    __tablename__ = "files"
+
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String)
+    s3_key = Column(String)
+    checksum = Column(String)
+    size = Column(Integer)
+    created_at = Column(DateTime, default=datetime.utcnow)
