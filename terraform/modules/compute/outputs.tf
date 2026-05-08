@@ -1,3 +1,5 @@
-output "instance_id" {
-  value = aws_instance.app.id
+
+output "alb_dns" {
+  value = aws_lb.app_alb.dns_name
 }
+
