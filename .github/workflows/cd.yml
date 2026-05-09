@@ -1,0 +1,29 @@
+name: CD - Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI - Build & Push"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configure AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::ACCOUNT_ID:role/github-actions-role
+          aws-region: us-east-1
+
+      - name: Trigger Instance Refresh
+        run: |
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name app-asg \
+            --preferences MinHealthyPercentage=90
+            

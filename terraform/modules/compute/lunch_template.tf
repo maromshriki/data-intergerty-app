@@ -15,12 +15,31 @@ resource "aws_launch_template" "app" {
 
     echo "DB_HOST=${var.db_endpoint}" >> /etc/environment
     yum install -y aws-cli
-    yum install -y httpd
-    systemctl start httpd
-    systemctl enable httpd
+    
+    set -e
 
-    echo "Hello from $(hostname)" > /var/www/html/index.html
-EOF
-)
+    # install docker
+    yum update -y
+    yum install -y docker
+
+    systemctl enable docker
+    systemctl start docker
+
+    # login to ECR
+    aws ecr get-login-password --region us-east-1 \
+      | docker login --username AWS --password-stdin <ECR_REGISTRY>
+
+    # pull image
+    docker pull <ECR_REGISTRY>/flask-app:latest
+
+    # run container
+    docker run -d \
+      -p 80:5000 \
+      --name flask-app \
+      -e DB_HOST=${DB_HOST} \
+      -e DB_PASSWORD=${DB_PASSWORD} \
+      <ECR_REGISTRY>/flask-app:latest
+    EOF
+    )
   
 }
